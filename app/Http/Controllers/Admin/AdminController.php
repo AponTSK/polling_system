@@ -48,20 +48,26 @@ class AdminController extends Controller
         ]);
     }
 
-    public function destroy(Request $request)
+    public function destroy($id)
     {
-        $poll = Poll::findOrFail($request->poll_id);
+        $poll = Poll::find($id);
+
+        if (!$poll)
+        {
+            return response()->json([
+                'success' => 'false',
+                'message' => 'Poll not found',
+            ]);
+        }
+
         $poll->delete();
-
-
-
         $polls = Poll::with('options', 'votes')->get();
         $html = view('admin.poll.table', compact('polls'))->render();
 
         return response()->json([
             'success' => true,
             'html' => $html,
-            'message' => 'Poll deleted successfully.'
+            'message' => "Poll deleted successfully",
         ]);
     }
 }

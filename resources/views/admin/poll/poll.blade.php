@@ -15,65 +15,61 @@
             </div>
         </div>
     </div>
+</div>
 
-    @push('script')
-        <script>
-            $(document).ready(function() {
-                $(document).on('click', '.toggle-status-btn', function() {
-                    const url = $(this).data('action');
-                    const button = $(this);
 
-                    $.ajax({
-                        type: "POST",
-                        url: url,
-                        data: {
-                            '_token': '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
-                            if (response.status = 'success') {
+@push('script')
+    <script>
+        $(document).ready(function() {
+            $(document).on('click', '.toggle-status-btn', function() {
+                const url = $(this).data('action');
+                const button = $(this);
 
-                                const newStatus = response.poll.status == 1 ? 'Deactivate' : 'Activate';
-                                button.text(newStatus);
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {
+                        '_token': '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.status = 'success') {
 
-                                if (response.poll.status == 1) {
-                                    button.removeClass('btn-success').addClass('btn-danger');
-                                    alert(response.message)
-                                } else {
-                                    button.removeClass('btn-danger').addClass('btn-success');
-                                    alert(response.message)
-                                }
-
+                            const newStatus = response.poll.status == 1 ? 'Deactivate' : 'Activate';
+                            button.text(newStatus);
+                            if (response.poll.status == 1) {
+                                button.removeClass('btn-success').addClass('btn-danger');
+                                alert(response.message)
                             } else {
-
+                                button.removeClass('btn-danger').addClass('btn-success');
                                 alert(response.message)
                             }
+
+                        } else {
+
+                            alert(response.message)
                         }
-                    });
-
-                })
-
-                $(document).on('click', '.delete-poll-btn', function() {
-
-                    const pollId = $(this).data('poll-id');
-
-                    if (confirm("Are you sure you want to delete this poll?")) {
-                        $.ajax({
-                            type: "GET",
-                            url: "{{ route('admin.poll.delete', ['id' => '__id__']) }}".replace('__id__', pollId),
-                            data: {
-                                'poll_id': pollId,
-                                '_token': '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                if (response.success) {
-                                    alert(response.message);
-                                    $('.poll-table').html(response.html);
-                                }
-                            }
-                        });
                     }
                 });
 
             });
-        </script>
-    @endpush
+
+            $(document).on('click', '.delete-poll-btn', function() {
+                const url = $(this).data('action');
+
+                if (confirm("Are you sure you want to delete this pioll?")) {
+                    $.ajax({
+                        type: "GET",
+                        url: url,
+                        success: function(response) {
+                            if (response.success) {
+                                alert(response.message);
+                                $('.poll-table').html(response.html);
+                            }
+                        }
+                    });
+                }
+            })
+
+        });
+    </script>
+@endpush

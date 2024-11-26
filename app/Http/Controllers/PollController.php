@@ -15,7 +15,6 @@ class PollController extends Controller
     public function index(Request $request)
     {
         $pollsQuery = Poll::where('status', 1);
-
         if ($request->has('active') && $request->active === 'true')
         {
             $pollsQuery->where('expires_at', '>', now());
@@ -27,7 +26,7 @@ class PollController extends Controller
                 ->orderByDesc('votes_count');
         }
 
-        $polls = $pollsQuery->get();
+        $polls = $pollsQuery->with('user')->get();
 
 
         if (request()->ajax())
@@ -143,7 +142,7 @@ class PollController extends Controller
 
     public function delete(Request $request)
     {
-        $poll = Poll::findOrFail($request->poll_id);
+        $poll = Poll::find($request->poll_id);
 
         if ($poll->user_id != auth()->id())
         {

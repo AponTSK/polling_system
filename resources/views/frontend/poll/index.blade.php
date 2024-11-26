@@ -9,20 +9,19 @@
     </section>
 
     <div class="container my-5 ">
-        <div class="row poll-parent">
-            <div class="mb-3">
-                <div class="btn-group">
-                    <button class="btn btn-primary btn-filter dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        @lang('Filter Polls')
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item filter-btn" href="#" data-filter="active" data-value="true">@lang('Active Polls')</a></li>
-                        <li><a class="dropdown-item filter-btn" href="#" data-filter="active" data-value="false">@lang('Expired Polls')</a></li>
-                        <li><a class="dropdown-item filter-btn" href="#" data-filter="most_voted" data-value="true">@lang('Most Voted')</a></li>
-                        <li><a class="dropdown-item filter-btn" href="#" data-filter="most_voted" data-value="false">@lang('Least Voted')</a></li>
-                    </ul>
-                </div>
+
+        <div class="mb-3">
+            <div class="btn-group">
+                <button class="btn btn-primary btn-filter dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    @lang('Filter Polls')
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item filter-btn" href="#" data-filter="active" data-value="true">@lang('Active Polls')</a></li>
+                    <li><a class="dropdown-item filter-btn" href="#" data-filter="most_voted" data-value="true">@lang('Most Voted')</a></li>
+                </ul>
             </div>
+        </div>
+        <div class="row poll-parent">
             <div class="poll-list-container row">
                 @include('frontend.poll.poll')
             </div>
@@ -181,6 +180,9 @@
                 $('.filter-btn').on('click', function() {
                     var filter = $(this).data('filter');
                     var value = $(this).data('value');
+                    var selectedText = $(this).text();
+
+                    $('.btn-filter').text(selectedText);
 
                     $.ajax({
                         url: "{{ route('poll.index') }}",
@@ -190,7 +192,6 @@
                         },
                         success: function(response) {
                             if (response.success) {
-
                                 $('.poll-list-container').html(response.html);
                             }
                         }
